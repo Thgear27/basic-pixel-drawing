@@ -1,9 +1,9 @@
-use crate::renderer;
+use crate::pixel_renderer;
 use crate::window;
 
+use pixel_renderer::PixelRenderer;
 use raylib_ffi::colors::*;
 use raylib_ffi::GetTime;
-use renderer::PixelRenderer;
 use window::Window;
 
 const WINDOW_WIDTH: usize = 800; // Window width
@@ -38,21 +38,18 @@ impl Engine {
 
     fn update(&mut self) {
         self.renderer.begin_drawing(BLACK);
+        self.renderer.clear_buffer(BLACK);
 
-        let time_in_seconds = get_time();
+        let time = get_time();
 
-        let x = ((time_in_seconds).sin() * (self.renderer.get_ctx_width() as f64)).abs() as usize;
-
-        println!("x: {}", x);
+        let ypos = time.sin() * 100.0;
+        let xpos = time.cos() * 100.0;
 
         self.renderer
-            .put_pixel(x as f32, (self.renderer.get_ctx_width() / 2) as f32, WHITE);
-
+            .line((150.0, 150.0), (150.0 + xpos, 150.0 + ypos), WHITE);
         self.renderer.show_pixels();
 
         self.renderer.end_drawing();
-        self.renderer.clear_buffer(BLACK);
-        // Update game logic
     }
 }
 

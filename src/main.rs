@@ -1,5 +1,7 @@
+#![allow(dead_code)]
+
 mod engine;
-mod renderer;
+mod pixel_renderer;
 mod window;
 
 use engine::Engine;
