@@ -6,6 +6,7 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+lazy_static = "1.4.0"
 num-traits = "0.2.18"
 raylib-ffi = "5.0.0"
 russimp = "3.2.0"

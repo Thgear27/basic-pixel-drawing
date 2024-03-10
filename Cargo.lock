@@ -991,6 +991,7 @@ dependencies = [
 name = "rust-renderer"
 version = "0.1.0"
 dependencies = [
+ "lazy_static",
  "num-traits",
  "raylib-ffi",
  "russimp",

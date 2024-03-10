@@ -46,7 +46,7 @@ impl Engine {
         let xpos = time.cos() * 100.0;
 
         self.renderer
-            .line((150.0, 150.0), (150.0 + xpos, 150.0 + ypos), WHITE);
+            .line((0.0, 0.0), (150.0 + xpos, 150.0 + ypos), WHITE);
         self.renderer.show_pixels();
 
         self.renderer.end_drawing();
