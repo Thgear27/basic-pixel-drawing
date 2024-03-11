@@ -1,4 +1,6 @@
+use crate::matrix::Matrix;
 use crate::mesh::Mesh;
+use crate::pixel_renderer::Renderer;
 use russimp::node::Node;
 use russimp::scene::{PostProcess, Scene};
 
@@ -40,6 +42,12 @@ impl Model {
         // Then do the same for each of its children
         for child in node.children.borrow_mut().iter() {
             self.process_node(child, scene);
+        }
+    }
+
+    pub fn draw(&self, renderer: &mut Renderer, viewport: &Matrix) {
+        for mesh in &self.meshes {
+            mesh.draw(renderer, viewport);
         }
     }
 }

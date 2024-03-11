@@ -1,7 +1,9 @@
+use crate::matrix::Matrix;
+use crate::model::Model;
 use crate::pixel_renderer;
 use crate::window;
 
-use pixel_renderer::PixelRenderer;
+use pixel_renderer::Renderer;
 use raylib_ffi::colors::*;
 use raylib_ffi::GetTime;
 use window::Window;
@@ -14,7 +16,9 @@ const CONTEXT_HEIGHT: usize = WINDOW_HEIGHT / 2; // Context  height
 
 pub struct Engine {
     window: Window,
-    renderer: PixelRenderer,
+    renderer: Renderer,
+    model: Model,
+    viewport: Matrix,
 }
 
 impl Engine {
@@ -22,10 +26,19 @@ impl Engine {
         let window = Window::new(WINDOW_WIDTH, WINDOW_HEIGHT, "Renderer");
         window.init();
 
-        let renderer =
-            PixelRenderer::new(CONTEXT_WIDTH, CONTEXT_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT);
+        let renderer = Renderer::new(CONTEXT_WIDTH, CONTEXT_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT);
 
-        Self { window, renderer }
+        let model = Model::load_from_file("assets/monkey.obj");
+
+        let viewport = Matrix::viewport(CONTEXT_WIDTH, CONTEXT_HEIGHT);
+
+        println!("Setup complete");
+        Self {
+            window,
+            renderer,
+            model,
+            viewport,
+        }
     }
 
     pub fn run(&mut self) {
@@ -40,13 +53,8 @@ impl Engine {
         self.renderer.begin_drawing(BLACK);
         self.renderer.clear_buffer(BLACK);
 
-        let time = get_time();
+        self.model.draw(&mut self.renderer, &self.viewport);
 
-        let ypos = time.sin() * 100.0;
-        let xpos = time.cos() * 100.0;
-
-        self.renderer
-            .line((0.0, 0.0), (150.0 + xpos, 150.0 + ypos), WHITE);
         self.renderer.show_pixels();
 
         self.renderer.end_drawing();
@@ -54,6 +62,6 @@ impl Engine {
 }
 
 // TODO: Move this to a separate module
-fn get_time() -> f64 {
-    unsafe { GetTime() }
+fn get_time() -> f32 {
+    unsafe { GetTime() as f32 }
 }

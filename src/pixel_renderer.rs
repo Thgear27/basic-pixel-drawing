@@ -3,7 +3,7 @@ use std::os::raw::c_void;
 use raylib_ffi::colors::*;
 use raylib_ffi::*;
 
-pub struct PixelRenderer {
+pub struct Renderer {
     screen_buffer_data: Vec<Color>,
     screen_buffer: Image,
     screen_texture: Texture2D,
@@ -13,7 +13,7 @@ pub struct PixelRenderer {
     window_height: usize,
 }
 
-impl PixelRenderer {
+impl Renderer {
     pub fn new(
         context_width: usize,
         context_height: usize,
@@ -40,7 +40,7 @@ impl PixelRenderer {
 
         let screen_texture = load_texture_from_image(screen_buffer);
 
-        PixelRenderer {
+        Renderer {
             screen_buffer_data,
             screen_buffer,
             screen_texture,
@@ -89,7 +89,13 @@ impl PixelRenderer {
         self.context_width
     }
 
-    pub fn line(&mut self, mut start: (f64, f64), mut end: (f64, f64), color: Color) {
+    pub fn triangle_line(&mut self, p1: (f32, f32), p2: (f32, f32), p3: (f32, f32), color: Color) {
+        self.line(p1, p2, color);
+        self.line(p2, p3, color);
+        self.line(p1, p3, color);
+    }
+
+    pub fn line(&mut self, mut start: (f32, f32), mut end: (f32, f32), color: Color) {
         // Slope should be less than 1
         let mut inverted_plane = false;
         if (end.1 - start.1).abs() > (end.0 - start.0).abs() {

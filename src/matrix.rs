@@ -3,7 +3,7 @@ use std::ops::Mul;
 
 use lazy_static::lazy_static;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Matrix {
     pub data: Vec<Vec<f32>>,
     pub rows: usize,
@@ -113,6 +113,28 @@ impl Matrix {
         result.data[0][1] = -angle.sin();
         result.data[1][0] = angle.sin();
         result.data[1][1] = angle.cos();
+
+        result
+    }
+
+    pub fn projection(aspect_ratio: f32, fov: f32, near: f32, far: f32) -> Matrix {
+        let mut result = Matrix::identity(4);
+
+        let fov_rad = 1.0 / (fov * 0.5 / 180.0 * std::f32::consts::PI).tan();
+        result.data[0][0] = aspect_ratio * fov_rad;
+        result.data[1][1] = fov_rad;
+        result.data[2][2] = far / (far - near);
+        result.data[3][2] = (-far * near) / (far - near);
+        result.data[2][3] = 1.0;
+        result.data[3][3] = 0.0;
+
+        result
+    }
+
+    // If the projection matrix does not work, try using the following:
+    pub fn z_division() -> Matrix {
+        let mut result = Matrix::identity(4);
+        result.data[3][2] = 1.0;
 
         result
     }

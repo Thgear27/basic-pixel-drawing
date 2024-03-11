@@ -1,6 +1,6 @@
 use num_traits::Num;
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 pub struct Vertex3<T: Num + Copy> {
     pub x: T,
     pub y: T,
